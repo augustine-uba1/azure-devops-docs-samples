@@ -1,0 +1,9 @@
+{
+	"name": "data-factory-cicd-dev12550",
+	"location": "ukwest",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "56b90d9e-af72-4259-990b-c0b91406ae6e",
+		"tenantId": "19e6cd8e-58ff-4aaa-a13f-e176857d78b2"
+	}
+}
