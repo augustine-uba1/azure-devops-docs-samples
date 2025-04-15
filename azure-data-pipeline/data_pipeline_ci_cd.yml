@@ -76,22 +76,22 @@ stages:
                   done
                 displayName: 'Deploy Notebooks to /Shared'
                 
-  - deployment: "Deploy_to_ADF"
-    displayName: 'Deploy to ADF'
-    timeoutInMinutes: 0
-    environment: qa
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-            - task: AzureResourceGroupDeployment@2
-              displayName: 'Deploy ADF resources'
-              inputs:
-                azureSubscription: $(AZURE_RM_CONNECTION)
-                resourceGroupName: $(RESOURCE_GROUP)
-                location: $(LOCATION)
-                csmFile: '$(Pipeline.Workspace)/adf-pipelines/ARMTemplateForFactory.json'
-                csmParametersFile: '$(Pipeline.Workspace)/adf-pipelines/ARMTemplateParametersForFactory.json'
-                overrideParameters: -factoryName "$(DATA_FACTORY_TEST_NAME)"
-                                    -DataPipeline_properties_variables_storage_account_name_defaultValue "$(STORAGE_ACCOUNT_NAME)"
-                                    -DataPipeline_properties_variables_storage_container_name_defaultValue "$(STORAGE_CONTAINER_NAME)"
+    - deployment: "Deploy_to_ADF"
+      displayName: 'Deploy to ADF'
+      timeoutInMinutes: 0
+      environment: qa
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - task: AzureResourceGroupDeployment@2
+                displayName: 'Deploy ADF resources'
+                inputs:
+                  azureSubscription: $(AZURE_RM_CONNECTION)
+                  resourceGroupName: $(RESOURCE_GROUP)
+                  location: $(LOCATION)
+                  csmFile: '$(Pipeline.Workspace)/adf-pipelines/ARMTemplateForFactory.json'
+                  csmParametersFile: '$(Pipeline.Workspace)/adf-pipelines/ARMTemplateParametersForFactory.json'
+                  overrideParameters: -factoryName "$(DATA_FACTORY_TEST_NAME)"
+                                      -DataPipeline_properties_variables_storage_account_name_defaultValue "$(STORAGE_ACCOUNT_NAME)"
+                                      -DataPipeline_properties_variables_storage_container_name_defaultValue "$(STORAGE_CONTAINER_NAME)"
