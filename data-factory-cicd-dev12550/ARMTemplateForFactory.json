@@ -31,7 +31,7 @@
 						"type": "DatabricksNotebook",
 						"dependsOn": [
 							{
-								"activity": "CopyData",
+								"activity": "CopyData1",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -68,7 +68,7 @@
 						}
 					},
 					{
-						"name": "CopyData",
+						"name": "CopyData1",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
