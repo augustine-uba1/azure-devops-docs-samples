@@ -39,32 +39,43 @@ stages:
 - stage: 'CD'
   displayName: 'CD'
   jobs:
-  - deployment: "Deploy_to_Databricks"
-    displayName: 'Deploy to Databricks'
-    timeoutInMinutes: 0
-    environment: qa
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.x'
-                addToPath: true
-                architecture: 'x64'
-              displayName: 'Use Python3'
-            # Need to install DevOps for Azure Databricks extension
-            - task: configuredatabricks@0
-              inputs:
-                url: '$(DATABRICKS_URL)'
-                token: '$(databricks-token)'
-              displayName: 'Configure Databricks CLI'    
+    - deployment: "Deploy_to_Databricks"
+      displayName: 'Deploy to Databricks'
+      timeoutInMinutes: 0
+      environment: qa
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - task: UsePythonVersion@0
+                inputs:
+                  versionSpec: '3.x'
+                  addToPath: true
+                  architecture: 'x64'
+                displayName: 'Use Python 3'
 
-            - task: deploynotebooks@0
-              inputs:
-                notebooksFolderPath: '$(Pipeline.Workspace)/notebooks'
-                workspaceFolder: '/Shared'
-              displayName: 'Deploy (copy) data processing notebook to the Databricks cluster'
+              - script: |
+                  pip install databricks-cli
+                displayName: 'Install Databricks CLI'
+
+              - script: |
+                  mkdir -p ~/.databricks
+                  echo "[DEFAULT]" > ~/.databricks/config
+                  echo "host = $(DATABRICKS_URL)" >> ~/.databricks/config
+                  echo "token = $(databricks-token)" >> ~/.databricks/config
+                displayName: 'Configure Databricks CLI'
+
+              - script: |
+                  echo "Uploading notebooks to Databricks workspace"
+                  NOTEBOOKS_PATH="$(Pipeline.Workspace)/notebooks"
+                  for nb in $(find "$NOTEBOOKS_PATH" -name "*.py"); do
+                    REL_PATH=${nb#"$NOTEBOOKS_PATH/"}
+                    WS_PATH="/Shared/$REL_PATH"
+                    echo "Uploading $nb to $WS_PATH"
+                    databricks workspace import --format SOURCE --language PYTHON --overwrite "$nb" "$WS_PATH"
+                  done
+                displayName: 'Deploy Notebooks to /Shared'
+                
   - deployment: "Deploy_to_ADF"
     displayName: 'Deploy to ADF'
     timeoutInMinutes: 0
