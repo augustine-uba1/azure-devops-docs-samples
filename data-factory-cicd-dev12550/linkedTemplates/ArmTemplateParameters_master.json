@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "data-factory-cicd-dev12550"
+		},
+		"DataPipeline_properties_variables_storage_account_name_defaultValue": {
+			"value": "yourstorageaccount"
+		},
+		"DataPipeline_properties_variables_storage_container_name_defaultValue": {
+			"value": "prepareddata"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
